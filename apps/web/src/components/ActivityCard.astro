@@ -1,0 +1,67 @@
+---
+import type { Activity } from "@toddoo/types";
+import { formatDate } from "../lib/activities";
+
+interface Props {
+  activity: Activity;
+}
+
+const { activity } = Astro.props;
+
+const categoryColors: Record<string, string> = {
+  sports: "bg-green-100 text-green-800",
+  arts: "bg-purple-100 text-purple-800",
+  music: "bg-pink-100 text-pink-800",
+  outdoors: "bg-emerald-100 text-emerald-800",
+  camps: "bg-orange-100 text-orange-800",
+  library: "bg-blue-100 text-blue-800",
+  community: "bg-yellow-100 text-yellow-800",
+  other: "bg-gray-100 text-gray-800",
+};
+
+const colorClass = categoryColors[activity.category] || categoryColors.other;
+---
+
+<a
+  href={`/activity/${activity.slug}`}
+  class="block bg-white rounded-lg border border-gray-200 hover:border-indigo-300 hover:shadow-md transition-all p-5"
+  data-borough={activity.borough || ""}
+  data-category={activity.category}
+>
+  <div class="flex items-start justify-between gap-3 mb-2">
+    <h3 class="font-semibold text-lg leading-tight">{activity.title}</h3>
+    <span class={`shrink-0 text-xs font-medium px-2 py-1 rounded-full ${colorClass}`}>
+      {activity.category}
+    </span>
+  </div>
+
+  <p class="text-gray-600 text-sm line-clamp-2 mb-3">{activity.description}</p>
+
+  <div class="flex flex-wrap gap-2 text-xs text-gray-500">
+    <span class="flex items-center gap-1">
+      <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+        <path d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+      </svg>
+      {formatDate(activity.startDate)}
+      {activity.endDate && activity.endDate !== activity.startDate && ` - ${formatDate(activity.endDate)}`}
+    </span>
+
+    {activity.borough && (
+      <span class="flex items-center gap-1">
+        <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+          <path d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+          <path d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+        </svg>
+        {activity.borough}
+      </span>
+    )}
+
+    {activity.cost && (
+      <span class="font-medium text-indigo-600">{activity.cost}</span>
+    )}
+
+    {activity.recurrence && (
+      <span class="italic">{activity.recurrence}</span>
+    )}
+  </div>
+</a>

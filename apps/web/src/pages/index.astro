@@ -1,0 +1,42 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import ActivityCard from "../components/ActivityCard.astro";
+import FilterBar from "../components/FilterBar.astro";
+import NewsletterSignup from "../components/NewsletterSignup.astro";
+import { getUpcomingActivities, getLastUpdated } from "../lib/activities";
+
+const activities = getUpcomingActivities();
+const lastUpdated = new Date(getLastUpdated()).toLocaleDateString("en-CA", {
+  weekday: "long",
+  year: "numeric",
+  month: "long",
+  day: "numeric",
+});
+---
+
+<BaseLayout title="Kids Activities in the West Island">
+  <div class="mb-6">
+    <h1 class="text-3xl font-bold mb-2">Upcoming Activities</h1>
+    <p class="text-gray-500 text-sm">Last updated: {lastUpdated}</p>
+  </div>
+
+  <FilterBar />
+
+  <div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-3" id="activity-grid">
+    {activities.map((activity) => (
+      <ActivityCard activity={activity} />
+    ))}
+  </div>
+
+  <p id="no-results" class="text-center text-gray-500 py-12 hidden">
+    No activities match your filters. Try adjusting your selection.
+  </p>
+
+  {activities.length === 0 && (
+    <p class="text-center text-gray-500 py-12">
+      No upcoming activities found. Check back soon!
+    </p>
+  )}
+
+  <NewsletterSignup />
+</BaseLayout>

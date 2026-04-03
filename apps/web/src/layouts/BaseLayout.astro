@@ -1,0 +1,35 @@
+---
+interface Props {
+  title: string;
+  description?: string;
+}
+
+const { title, description = "Find fun activities for kids in Montreal's West Island" } = Astro.props;
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content={description} />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <title>{title} | Toddoo</title>
+  </head>
+  <body class="min-h-screen bg-gray-50 text-gray-900">
+    <header class="bg-white border-b border-gray-200">
+      <div class="max-w-6xl mx-auto px-4 py-4 flex items-center justify-between">
+        <a href="/" class="text-2xl font-bold text-indigo-600">Toddoo</a>
+        <p class="text-sm text-gray-500 hidden sm:block">Kids Activities - West Island, Montreal</p>
+      </div>
+    </header>
+    <main class="max-w-6xl mx-auto px-4 py-8">
+      <slot />
+    </main>
+    <footer class="bg-white border-t border-gray-200 mt-12">
+      <div class="max-w-6xl mx-auto px-4 py-6 text-center text-sm text-gray-500">
+        <p>Toddoo - Helping families find activities in Montreal's West Island</p>
+      </div>
+    </footer>
+  </body>
+</html>

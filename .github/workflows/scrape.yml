@@ -1,0 +1,52 @@
+name: Weekly Scrape & Newsletter
+
+on:
+  schedule:
+    # Every Monday at 8 AM UTC (3 AM EST)
+    - cron: "0 8 * * 1"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  scrape:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: "npm"
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run scraper
+        run: npm run scrape
+
+      - name: Check for changes
+        id: changes
+        run: |
+          git diff --quiet data/activities.json && echo "changed=false" >> $GITHUB_OUTPUT || echo "changed=true" >> $GITHUB_OUTPUT
+
+      - name: Commit and push updated data
+        if: steps.changes.outputs.changed == 'true'
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add data/activities.json
+          git commit -m "chore: update activities data [$(date -u +%Y-%m-%d)]"
+          git push
+
+      - name: Send newsletter
+        if: steps.changes.outputs.changed == 'true'
+        env:
+          RESEND_API_KEY: ${{ secrets.RESEND_API_KEY }}
+          RESEND_AUDIENCE_ID: ${{ secrets.RESEND_AUDIENCE_ID }}
+          SITE_URL: ${{ vars.SITE_URL }}
+        run: npm run send-newsletter

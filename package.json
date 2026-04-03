@@ -1,0 +1,15 @@
+{
+  "name": "toddoo",
+  "private": true,
+  "workspaces": ["packages/*", "apps/*"],
+  "scripts": {
+    "scrape": "npm run scrape -w @toddoo/scraper",
+    "dev": "npm run dev -w @toddoo/web",
+    "build": "npm run build -w @toddoo/web",
+    "send-newsletter": "npm run send -w @toddoo/newsletter",
+    "typecheck": "tsc -b"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}
