@@ -14,22 +14,78 @@ const { title, description = "Find fun activities for kids in Montreal's West Is
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="description" content={description} />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet" />
     <title>{title} | Toddoo</title>
   </head>
-  <body class="min-h-screen bg-gray-50 text-gray-900">
-    <header class="bg-white border-b border-gray-200">
-      <div class="max-w-6xl mx-auto px-4 py-4 flex items-center justify-between">
-        <a href="/" class="text-2xl font-bold text-indigo-600">Toddoo</a>
-        <p class="text-sm text-gray-500 hidden sm:block">Kids Activities - West Island, Montreal</p>
-      </div>
-    </header>
-    <main class="max-w-6xl mx-auto px-4 py-8">
-      <slot />
-    </main>
-    <footer class="bg-white border-t border-gray-200 mt-12">
-      <div class="max-w-6xl mx-auto px-4 py-6 text-center text-sm text-gray-500">
-        <p>Toddoo - Helping families find activities in Montreal's West Island</p>
-      </div>
-    </footer>
+  <body class="min-h-screen bg-[#FFF8F0] text-gray-900 font-[Nunito]">
+    <!-- Subtle grid texture overlay -->
+    <div class="fixed inset-0 pointer-events-none opacity-[0.03] z-0" style="background-image: url('data:image/svg+xml,%3Csvg width=%2220%22 height=%2220%22 xmlns=%22http://www.w3.org/2000/svg%22%3E%3Ccircle cx=%221%22 cy=%221%22 r=%221%22 fill=%22%23000%22/%3E%3C/svg%3E');"></div>
+
+    <div class="relative z-10">
+      <!-- Header -->
+      <header class="border-b-[3px] border-gray-900 bg-white">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 py-4 flex items-center justify-between">
+          <a href="/" class="flex items-center gap-2.5 group">
+            <div class="w-10 h-10 bg-[#FF6B2C] rounded-xl border-[2.5px] border-gray-900 flex items-center justify-center shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] group-hover:shadow-[1px_1px_0px_0px_rgba(0,0,0,1)] group-hover:translate-x-[2px] group-hover:translate-y-[2px] transition-all">
+              <span class="text-xl leading-none">&#127912;</span>
+            </div>
+            <span class="text-2xl font-black tracking-tight text-gray-900">toddoo</span>
+          </a>
+          <div class="flex items-center gap-3">
+            <span class="hidden sm:inline-block text-sm font-semibold text-gray-500 bg-gray-100 px-3 py-1.5 rounded-lg border border-gray-200">
+              West Island, Montreal
+            </span>
+          </div>
+        </div>
+      </header>
+
+      <!-- Main content -->
+      <main class="max-w-6xl mx-auto px-4 sm:px-6 py-8">
+        <slot />
+      </main>
+
+      <!-- Footer -->
+      <footer class="border-t-[3px] border-gray-900 bg-white mt-16">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 py-8">
+          <div class="flex flex-col sm:flex-row items-center justify-between gap-4">
+            <div class="flex items-center gap-2">
+              <div class="w-7 h-7 bg-[#FF6B2C] rounded-lg border-2 border-gray-900 flex items-center justify-center">
+                <span class="text-sm">&#127912;</span>
+              </div>
+              <span class="font-extrabold text-gray-900">toddoo</span>
+            </div>
+            <p class="text-sm text-gray-500 font-medium text-center">
+              Helping West Island families find awesome stuff to do with their kids
+            </p>
+          </div>
+        </div>
+      </footer>
+    </div>
+
+    <style is:global>
+      /* Smooth scrolling */
+      html { scroll-behavior: smooth; }
+
+      /* Override tailwind defaults with Nunito */
+      body { font-family: 'Nunito', system-ui, -apple-system, sans-serif; }
+
+      /* Fun selection color */
+      ::selection {
+        background-color: #FFE0CC;
+        color: #1a1a1a;
+      }
+
+      /* Custom scrollbar */
+      ::-webkit-scrollbar { width: 10px; }
+      ::-webkit-scrollbar-track { background: #FFF8F0; }
+      ::-webkit-scrollbar-thumb {
+        background: #FFB088;
+        border-radius: 999px;
+        border: 2px solid #FFF8F0;
+      }
+      ::-webkit-scrollbar-thumb:hover { background: #FF6B2C; }
+    </style>
   </body>
 </html>

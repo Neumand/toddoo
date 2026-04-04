@@ -2,44 +2,68 @@
 import { getBoroughs } from "../lib/activities";
 
 const boroughs = getBoroughs();
-const categories = ["sports", "arts", "music", "outdoors", "camps", "library", "community"];
+
+const categories = [
+  { value: "sports", label: "Sports", emoji: "\u26BD" },
+  { value: "arts", label: "Arts", emoji: "\uD83C\uDFA8" },
+  { value: "music", label: "Music", emoji: "\uD83C\uDFB5" },
+  { value: "outdoors", label: "Outdoors", emoji: "\uD83C\uDF33" },
+  { value: "camps", label: "Camps", emoji: "\u26FA" },
+  { value: "library", label: "Library", emoji: "\uD83D\uDCDA" },
+  { value: "community", label: "Community", emoji: "\uD83C\uDF89" },
+];
 ---
 
 <div class="mb-8 space-y-4">
-  <div class="flex flex-wrap gap-3">
-    <select
-      id="borough-filter"
-      class="px-3 py-2 rounded-lg border border-gray-300 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-indigo-500"
+  <!-- Category pills -->
+  <div class="flex flex-wrap gap-2">
+    <button
+      data-category-btn=""
+      class="category-pill active text-sm font-bold px-3.5 py-2 rounded-xl border-2 border-gray-900 bg-gray-900 text-white shadow-[3px_3px_0px_0px_rgba(0,0,0,0.15)] transition-all"
     >
-      <option value="">All Boroughs</option>
-      {boroughs.map((b) => <option value={b}>{b}</option>)}
-    </select>
+      All
+    </button>
+    {categories.map((c) => (
+      <button
+        data-category-btn={c.value}
+        class="category-pill text-sm font-bold px-3.5 py-2 rounded-xl border-2 border-gray-900 bg-white text-gray-900 shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] hover:translate-x-[1px] hover:translate-y-[1px] hover:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] transition-all"
+      >
+        <span class="mr-1">{c.emoji}</span>{c.label}
+      </button>
+    ))}
+  </div>
 
-    <select
-      id="category-filter"
-      class="px-3 py-2 rounded-lg border border-gray-300 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-indigo-500"
-    >
-      <option value="">All Categories</option>
-      {categories.map((c) => (
-        <option value={c}>{c.charAt(0).toUpperCase() + c.slice(1)}</option>
-      ))}
-    </select>
+  <!-- Borough dropdown -->
+  <div class="flex items-center gap-3">
+    <label for="borough-filter" class="text-sm font-bold text-gray-700">Borough:</label>
+    <div class="relative">
+      <select
+        id="borough-filter"
+        class="appearance-none pl-3 pr-8 py-2 rounded-xl border-2 border-gray-900 text-sm font-bold bg-white shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] focus:outline-none focus:shadow-[1px_1px_0px_0px_rgba(0,0,0,1)] focus:translate-x-[2px] focus:translate-y-[2px] transition-all cursor-pointer"
+      >
+        <option value="">All boroughs</option>
+        {boroughs.map((b) => <option value={b}>{b}</option>)}
+      </select>
+      <svg class="absolute right-2.5 top-1/2 -translate-y-1/2 w-4 h-4 pointer-events-none" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+        <path d="M19 9l-7 7-7-7" />
+      </svg>
+    </div>
   </div>
 </div>
 
 <script>
   const boroughFilter = document.getElementById("borough-filter") as HTMLSelectElement;
-  const categoryFilter = document.getElementById("category-filter") as HTMLSelectElement;
+  const categoryBtns = document.querySelectorAll<HTMLButtonElement>("[data-category-btn]");
+  let activeCategory = "";
 
   function applyFilters() {
     const borough = boroughFilter.value;
-    const category = categoryFilter.value;
     const cards = document.querySelectorAll<HTMLElement>("[data-borough]");
 
     let visibleCount = 0;
     cards.forEach((card) => {
       const matchBorough = !borough || card.dataset.borough === borough;
-      const matchCategory = !category || card.dataset.category === category;
+      const matchCategory = !activeCategory || card.dataset.category === activeCategory;
       const visible = matchBorough && matchCategory;
       card.style.display = visible ? "" : "none";
       if (visible) visibleCount++;
@@ -51,6 +75,24 @@ const categories = ["sports", "arts", "music", "outdoors", "camps", "library", "
     }
   }
 
+  categoryBtns.forEach((btn) => {
+    btn.addEventListener("click", () => {
+      activeCategory = btn.dataset.categoryBtn || "";
+
+      // Update button styles
+      categoryBtns.forEach((b) => {
+        const isActive = b === btn;
+        b.classList.toggle("bg-gray-900", isActive);
+        b.classList.toggle("text-white", isActive);
+        b.classList.toggle("bg-white", !isActive);
+        b.classList.toggle("text-gray-900", !isActive);
+        b.classList.toggle("shadow-[3px_3px_0px_0px_rgba(0,0,0,0.15)]", isActive);
+        b.classList.toggle("shadow-[3px_3px_0px_0px_rgba(0,0,0,1)]", !isActive);
+      });
+
+      applyFilters();
+    });
+  });
+
   boroughFilter.addEventListener("change", applyFilters);
-  categoryFilter.addEventListener("change", applyFilters);
 </script>

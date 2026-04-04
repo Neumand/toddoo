@@ -15,28 +15,62 @@ const lastUpdated = new Date(getLastUpdated()).toLocaleDateString("en-CA", {
 ---
 
 <BaseLayout title="Kids Activities in the West Island">
-  <div class="mb-6">
-    <h1 class="text-3xl font-bold mb-2">Upcoming Activities</h1>
-    <p class="text-gray-500 text-sm">Last updated: {lastUpdated}</p>
+  <!-- Hero section -->
+  <div class="mb-10">
+    <div class="bg-[#FF6B2C] rounded-3xl border-[3px] border-gray-900 shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] p-6 sm:p-8 mb-8 relative overflow-hidden">
+      <!-- Decorative circles -->
+      <div class="absolute -top-6 -right-6 w-24 h-24 rounded-full bg-[#FF8F5C] opacity-50"></div>
+      <div class="absolute -bottom-4 -left-4 w-16 h-16 rounded-full bg-[#FF8F5C] opacity-30"></div>
+
+      <div class="relative">
+        <h1 class="text-3xl sm:text-4xl font-black text-white mb-2 leading-tight">
+          What's happening<br />this week? &#127881;
+        </h1>
+        <p class="text-white/80 font-semibold text-lg max-w-md">
+          Activities, events, and fun stuff for kids in Montreal's West Island.
+        </p>
+        <div class="mt-4 inline-flex items-center gap-2 bg-white/20 backdrop-blur-sm rounded-xl px-3 py-1.5 text-sm font-bold text-white border border-white/30">
+          <div class="w-2 h-2 rounded-full bg-green-300 animate-pulse"></div>
+          Updated {lastUpdated}
+        </div>
+      </div>
+    </div>
   </div>
 
+  <!-- Filters -->
   <FilterBar />
 
-  <div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-3" id="activity-grid">
+  <!-- Activity count -->
+  <div class="flex items-center justify-between mb-5">
+    <p class="text-sm font-bold text-gray-500" id="activity-count">
+      {activities.length} {activities.length === 1 ? "activity" : "activities"} found
+    </p>
+  </div>
+
+  <!-- Activity grid -->
+  <div class="grid gap-5 sm:grid-cols-2 lg:grid-cols-3" id="activity-grid">
     {activities.map((activity) => (
       <ActivityCard activity={activity} />
     ))}
   </div>
 
-  <p id="no-results" class="text-center text-gray-500 py-12 hidden">
-    No activities match your filters. Try adjusting your selection.
-  </p>
+  <!-- No results message -->
+  <div id="no-results" class="hidden">
+    <div class="text-center py-16">
+      <div class="text-5xl mb-4">&#128064;</div>
+      <p class="text-xl font-bold text-gray-900 mb-2">Nothing here!</p>
+      <p class="text-gray-500 font-medium">Try changing your filters to find more activities.</p>
+    </div>
+  </div>
 
   {activities.length === 0 && (
-    <p class="text-center text-gray-500 py-12">
-      No upcoming activities found. Check back soon!
-    </p>
+    <div class="text-center py-16">
+      <div class="text-5xl mb-4">&#127793;</div>
+      <p class="text-xl font-bold text-gray-900 mb-2">No activities yet</p>
+      <p class="text-gray-500 font-medium">Check back soon — we update every Monday!</p>
+    </div>
   )}
 
+  <!-- Newsletter -->
   <NewsletterSignup />
 </BaseLayout>

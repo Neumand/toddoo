@@ -14,122 +14,177 @@ if (!activity) {
   return Astro.redirect("/404");
 }
 
-const categoryColors: Record<string, string> = {
-  sports: "bg-green-100 text-green-800",
-  arts: "bg-purple-100 text-purple-800",
-  music: "bg-pink-100 text-pink-800",
-  outdoors: "bg-emerald-100 text-emerald-800",
-  camps: "bg-orange-100 text-orange-800",
-  library: "bg-blue-100 text-blue-800",
-  community: "bg-yellow-100 text-yellow-800",
-  other: "bg-gray-100 text-gray-800",
+const categoryConfig: Record<string, { emoji: string; bg: string }> = {
+  sports:    { emoji: "\u26BD", bg: "bg-green-50" },
+  arts:      { emoji: "\uD83C\uDFA8", bg: "bg-purple-50" },
+  music:     { emoji: "\uD83C\uDFB5", bg: "bg-pink-50" },
+  outdoors:  { emoji: "\uD83C\uDF33", bg: "bg-emerald-50" },
+  camps:     { emoji: "\u26FA", bg: "bg-amber-50" },
+  library:   { emoji: "\uD83D\uDCDA", bg: "bg-blue-50" },
+  community: { emoji: "\uD83C\uDF89", bg: "bg-orange-50" },
+  other:     { emoji: "\u2B50", bg: "bg-gray-50" },
 };
 
-const colorClass = categoryColors[activity.category] || categoryColors.other;
+const config = categoryConfig[activity.category] || categoryConfig.other;
 ---
 
 <BaseLayout title={activity.title} description={activity.description}>
   <div class="max-w-3xl mx-auto">
-    <a href="/" class="text-indigo-600 hover:text-indigo-800 text-sm mb-4 inline-block">
-      &larr; Back to all activities
+    <!-- Back link -->
+    <a
+      href="/"
+      class="inline-flex items-center gap-1.5 text-sm font-bold text-gray-600 hover:text-gray-900 mb-6 group transition-colors"
+    >
+      <svg class="w-4 h-4 group-hover:-translate-x-0.5 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+        <path d="M19 12H5m0 0l7 7m-7-7l7-7" />
+      </svg>
+      Back to activities
     </a>
 
-    <article class="bg-white rounded-lg border border-gray-200 p-6 sm:p-8">
-      <div class="flex items-start justify-between gap-3 mb-4">
-        <h1 class="text-2xl sm:text-3xl font-bold">{activity.title}</h1>
-        <span class={`shrink-0 text-sm font-medium px-3 py-1 rounded-full ${colorClass}`}>
-          {activity.category}
-        </span>
+    <!-- Main card -->
+    <article class="rounded-3xl border-[3px] border-gray-900 shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] bg-white overflow-hidden">
+      <!-- Header band -->
+      <div class:list={["px-6 sm:px-8 pt-6 sm:pt-8 pb-5", config.bg]}>
+        <div class="flex items-start gap-4">
+          <div class="w-14 h-14 rounded-2xl border-[2.5px] border-gray-900 bg-white flex items-center justify-center shrink-0 text-2xl shadow-[3px_3px_0px_0px_rgba(0,0,0,1)]">
+            {config.emoji}
+          </div>
+          <div class="flex-1 min-w-0">
+            <span class="inline-block text-xs font-extrabold uppercase tracking-wider text-gray-500 mb-1">
+              {activity.category}
+            </span>
+            <h1 class="text-2xl sm:text-3xl font-black text-gray-900 leading-tight">
+              {activity.title}
+            </h1>
+          </div>
+        </div>
       </div>
 
-      <div class="grid gap-4 sm:grid-cols-2 mb-6">
-        <div class="space-y-2 text-sm">
-          <div class="flex items-center gap-2 text-gray-600">
-            <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-              <path d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-            </svg>
-            <span>
-              {formatDate(activity.startDate)}
-              {activity.endDate && activity.endDate !== activity.startDate && ` - ${formatDate(activity.endDate)}`}
-            </span>
+      <!-- Info grid -->
+      <div class="px-6 sm:px-8 py-6 border-t-[2.5px] border-gray-900">
+        <div class="grid gap-3 sm:grid-cols-2 mb-6">
+          <!-- Date -->
+          <div class="flex items-center gap-3 bg-gray-50 rounded-xl px-4 py-3 border-[1.5px] border-gray-200">
+            <div class="w-9 h-9 rounded-lg bg-white border-[1.5px] border-gray-300 flex items-center justify-center shrink-0">
+              <svg class="w-4.5 h-4.5 text-gray-700" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                <path d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+              </svg>
+            </div>
+            <div>
+              <div class="text-xs font-bold text-gray-400 uppercase tracking-wider">When</div>
+              <div class="text-sm font-bold text-gray-900">
+                {formatDate(activity.startDate)}
+                {activity.endDate && activity.endDate !== activity.startDate && ` \u2013 ${formatDate(activity.endDate)}`}
+              </div>
+            </div>
           </div>
 
+          <!-- Borough / Location -->
+          {(activity.borough || activity.location) && (
+            <div class="flex items-center gap-3 bg-gray-50 rounded-xl px-4 py-3 border-[1.5px] border-gray-200">
+              <div class="w-9 h-9 rounded-lg bg-white border-[1.5px] border-gray-300 flex items-center justify-center shrink-0">
+                <svg class="w-4.5 h-4.5 text-gray-700" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                  <path d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                  <path d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                </svg>
+              </div>
+              <div>
+                <div class="text-xs font-bold text-gray-400 uppercase tracking-wider">Where</div>
+                <div class="text-sm font-bold text-gray-900">
+                  {activity.location || activity.borough}
+                </div>
+                {activity.location && activity.borough && (
+                  <div class="text-xs text-gray-500 font-medium">{activity.borough}</div>
+                )}
+              </div>
+            </div>
+          )}
+
+          <!-- Recurrence -->
           {activity.recurrence && (
-            <div class="flex items-center gap-2 text-gray-600">
-              <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                <path d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
-              </svg>
-              <span>{activity.recurrence}</span>
+            <div class="flex items-center gap-3 bg-gray-50 rounded-xl px-4 py-3 border-[1.5px] border-gray-200">
+              <div class="w-9 h-9 rounded-lg bg-white border-[1.5px] border-gray-300 flex items-center justify-center shrink-0">
+                <svg class="w-4.5 h-4.5 text-gray-700" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                  <path d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                </svg>
+              </div>
+              <div>
+                <div class="text-xs font-bold text-gray-400 uppercase tracking-wider">Repeats</div>
+                <div class="text-sm font-bold text-gray-900">{activity.recurrence}</div>
+              </div>
             </div>
           )}
 
+          <!-- Age group -->
           {activity.ageGroup && (
-            <div class="flex items-center gap-2 text-gray-600">
-              <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                <path d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z" />
-              </svg>
-              <span>Ages: {activity.ageGroup}</span>
-            </div>
-          )}
-        </div>
-
-        <div class="space-y-2 text-sm">
-          {activity.borough && (
-            <div class="flex items-center gap-2 text-gray-600">
-              <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                <path d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
-                <path d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
-              </svg>
-              <span>{activity.borough}</span>
+            <div class="flex items-center gap-3 bg-gray-50 rounded-xl px-4 py-3 border-[1.5px] border-gray-200">
+              <div class="w-9 h-9 rounded-lg bg-white border-[1.5px] border-gray-300 flex items-center justify-center shrink-0">
+                <svg class="w-4.5 h-4.5 text-gray-700" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                  <path d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z" />
+                </svg>
+              </div>
+              <div>
+                <div class="text-xs font-bold text-gray-400 uppercase tracking-wider">Ages</div>
+                <div class="text-sm font-bold text-gray-900">
+                  {activity.ageGroup === "all-ages" ? "All ages welcome" : `${activity.ageGroup} years`}
+                </div>
+              </div>
             </div>
           )}
 
-          {activity.location && (
-            <div class="flex items-center gap-2 text-gray-600">
-              <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                <path d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
-              </svg>
-              <span>{activity.location}</span>
-            </div>
-          )}
-
-          {activity.address && (
-            <div class="flex items-center gap-2 text-gray-600">
-              <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                <path d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
-              </svg>
-              <span>{activity.address}</span>
-            </div>
-          )}
-
+          <!-- Cost -->
           {activity.cost && (
-            <div class="flex items-center gap-2 text-indigo-600 font-medium">
-              <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                <path d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-              </svg>
-              <span>{activity.cost}</span>
+            <div class="flex items-center gap-3 bg-gray-50 rounded-xl px-4 py-3 border-[1.5px] border-gray-200">
+              <div class="w-9 h-9 rounded-lg bg-white border-[1.5px] border-gray-300 flex items-center justify-center shrink-0">
+                <svg class="w-4.5 h-4.5 text-gray-700" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                  <path d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+              </div>
+              <div>
+                <div class="text-xs font-bold text-gray-400 uppercase tracking-wider">Cost</div>
+                <div class="text-sm font-extrabold text-[#FF6B2C]">{activity.cost}</div>
+              </div>
+            </div>
+          )}
+
+          <!-- Address -->
+          {activity.address && (
+            <div class="flex items-center gap-3 bg-gray-50 rounded-xl px-4 py-3 border-[1.5px] border-gray-200">
+              <div class="w-9 h-9 rounded-lg bg-white border-[1.5px] border-gray-300 flex items-center justify-center shrink-0">
+                <svg class="w-4.5 h-4.5 text-gray-700" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                  <path d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
+                </svg>
+              </div>
+              <div>
+                <div class="text-xs font-bold text-gray-400 uppercase tracking-wider">Address</div>
+                <div class="text-sm font-bold text-gray-900">{activity.address}</div>
+              </div>
             </div>
           )}
         </div>
-      </div>
 
-      <div class="prose prose-gray max-w-none mb-6">
-        <p>{activity.description}</p>
-      </div>
+        <!-- Description -->
+        <div class="bg-gray-50 rounded-xl px-5 py-4 border-[1.5px] border-gray-200 mb-6">
+          <p class="text-gray-700 leading-relaxed font-medium">{activity.description}</p>
+        </div>
 
-      <div class="flex items-center justify-between border-t border-gray-200 pt-4">
-        <a
-          href={activity.sourceUrl}
-          target="_blank"
-          rel="noopener noreferrer"
-          class="inline-flex items-center gap-1 text-indigo-600 hover:text-indigo-800 text-sm font-medium"
-        >
-          View original
-          <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-            <path d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
-          </svg>
-        </a>
-        <span class="text-xs text-gray-400">Source: {activity.source}</span>
+        <!-- Actions -->
+        <div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
+          <a
+            href={activity.sourceUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            class="inline-flex items-center justify-center gap-2 bg-[#FF6B2C] text-white font-extrabold text-sm px-5 py-3 rounded-xl border-[2.5px] border-gray-900 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] transition-all"
+          >
+            View original source
+            <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+              <path d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+            </svg>
+          </a>
+          <span class="text-xs font-bold text-gray-400 text-center sm:text-left">
+            via {activity.source}
+          </span>
+        </div>
       </div>
     </article>
   </div>

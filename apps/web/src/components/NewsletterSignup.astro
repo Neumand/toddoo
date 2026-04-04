@@ -1,27 +1,45 @@
 ---
 ---
 
-<div class="bg-indigo-50 rounded-lg p-6 mt-8">
-  <h2 class="text-lg font-semibold text-indigo-900 mb-2">Weekly Activity Digest</h2>
-  <p class="text-sm text-indigo-700 mb-4">
-    Get a weekly email with the latest kids activities in the West Island.
-  </p>
-  <form id="newsletter-form" class="flex gap-2">
-    <input
-      type="email"
-      name="email"
-      required
-      placeholder="your@email.com"
-      class="flex-1 px-3 py-2 rounded-lg border border-indigo-200 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
-    />
-    <button
-      type="submit"
-      class="px-4 py-2 bg-indigo-600 text-white text-sm font-medium rounded-lg hover:bg-indigo-700 transition-colors"
-    >
-      Subscribe
-    </button>
-  </form>
-  <p id="newsletter-message" class="text-sm mt-2 hidden"></p>
+<div class="mt-12 bg-[#1B1642] rounded-3xl border-[3px] border-gray-900 shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] p-6 sm:p-8 relative overflow-hidden">
+  <!-- Decorative elements -->
+  <div class="absolute top-4 right-4 text-4xl opacity-20 rotate-12">&#9993;&#65039;</div>
+  <div class="absolute -bottom-2 -left-2 w-20 h-20 rounded-full bg-[#FF6B2C] opacity-10"></div>
+  <div class="absolute top-1/2 right-1/4 w-12 h-12 rounded-full bg-purple-500 opacity-10"></div>
+
+  <div class="relative">
+    <div class="flex items-center gap-2 mb-2">
+      <div class="w-8 h-8 rounded-lg bg-[#FF6B2C] border-2 border-white/20 flex items-center justify-center text-sm">
+        &#128232;
+      </div>
+      <span class="text-xs font-extrabold uppercase tracking-wider text-[#FF6B2C]">Weekly Digest</span>
+    </div>
+
+    <h2 class="text-2xl font-black text-white mb-2">
+      Never miss the fun stuff
+    </h2>
+    <p class="text-white/60 font-semibold text-sm mb-5 max-w-md">
+      Every Monday we'll send you a curated list of this week's best activities for kids in the West Island. No spam, unsubscribe anytime.
+    </p>
+
+    <form id="newsletter-form" class="flex flex-col sm:flex-row gap-2.5">
+      <input
+        type="email"
+        name="email"
+        required
+        placeholder="parent@email.com"
+        class="flex-1 px-4 py-3 rounded-xl border-2 border-white/20 bg-white/10 text-white placeholder-white/40 text-sm font-bold focus:outline-none focus:border-[#FF6B2C] focus:bg-white/15 transition-colors"
+      />
+      <button
+        type="submit"
+        class="px-6 py-3 bg-[#FF6B2C] text-white text-sm font-extrabold rounded-xl border-2 border-white/20 shadow-[3px_3px_0px_0px_rgba(255,255,255,0.15)] hover:translate-x-[1px] hover:translate-y-[1px] hover:shadow-[2px_2px_0px_0px_rgba(255,255,255,0.15)] transition-all"
+      >
+        Subscribe &#8594;
+      </button>
+    </form>
+
+    <p id="newsletter-message" class="text-sm font-bold mt-3 hidden"></p>
+  </div>
 </div>
 
 <script>
@@ -41,17 +59,17 @@
       });
 
       if (res.ok) {
-        message.textContent = "You're subscribed! Check your inbox on Mondays.";
-        message.className = "text-sm mt-2 text-green-700";
+        message.textContent = "\u2705 You're in! Check your inbox on Mondays.";
+        message.className = "text-sm font-bold mt-3 text-green-400";
         form.reset();
       } else {
         const data = await res.json();
         message.textContent = data.error || "Something went wrong. Please try again.";
-        message.className = "text-sm mt-2 text-red-600";
+        message.className = "text-sm font-bold mt-3 text-red-400";
       }
     } catch {
       message.textContent = "Network error. Please try again.";
-      message.className = "text-sm mt-2 text-red-600";
+      message.className = "text-sm font-bold mt-3 text-red-400";
     }
   });
 </script>
