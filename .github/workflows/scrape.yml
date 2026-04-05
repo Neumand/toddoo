@@ -27,6 +27,8 @@ jobs:
         run: npm ci
 
       - name: Run scraper
+        env:
+          POSTHOG_API_KEY: ${{ secrets.POSTHOG_API_KEY }}
         run: npm run scrape
 
       - name: Check for changes

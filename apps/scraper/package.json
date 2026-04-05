@@ -9,7 +9,8 @@
   },
   "dependencies": {
     "@toddoo/types": "*",
-    "cheerio": "^1.0.0"
+    "cheerio": "^1.0.0",
+    "posthog-node": "^5.28.11"
   },
   "devDependencies": {
     "@types/node": "^25.5.2",
